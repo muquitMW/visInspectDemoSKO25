@@ -1,2 +1,33 @@
-docker tag crackdetect:latest mmuquit/crackdetect:latest
-docker push mmuquit/crackdetect:latest
+%%%% COMPILE MICROSERVICE (ON MATLAB)
+ctf = compiler.build.productionServerArchive("isCrackPresentMat.m",...
+    "ArchiveName","sko2025demo")
+compiler.package.microserviceDockerImage(ctf,'ImageName','sko2025demo')
+
+
+%%%% PUSH TO AZURE (ON CMD)
+% Azure login
+az login
+az login --tenant 99dd3a11-4348-4468-9bdd-e5072b1dc1e6
+az acr login --name matlabappmicroservice.azurecr.io
+
+%Docker tag/push
+docker tag sko2025demo:latest matlabappmicroservice.azurecr.io/sko2025demo:latest
+docker push matlabappmicroservice.azurecr.io/sko2025demo:latest
+
+
+%%%% DEPLOY CONTAINER INSTANCE (ON AZURE PORTAL)
+Browser/Azure UI
+
+%%%% CALL FUNCTIONS FROM AZURE CONTAINER (ON MATLAB) 
+M-file (httpCallExample)
+
+
+
+
+
+SAS Token:
+setenv("MW_WASB_SAS_TOKEN",...
+"sp=rwl&sv=2022-11-02&sr=c&sig=8Pj99OvMR%2B3dOvAsvcVJxSfhwN0c4oMVMemXQQQ6EIY%3D");
+
+AWS access:
+crack = "s3://yingdatabucket/sko2025/crack.png"
